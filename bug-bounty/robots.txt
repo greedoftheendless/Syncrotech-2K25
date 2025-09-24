@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: /admin
+
+# The flag is: CTF{r0b0ts_fl4g}

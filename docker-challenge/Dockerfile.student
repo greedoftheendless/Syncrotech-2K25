@@ -1,0 +1,19 @@
+# ---- Xploit Dockerfile ----
+# image by copying files from the 'builder' stage of the main image.
+
+FROM docker.io/library/ubuntu:latest
+
+RUN apt-get update && apt-get install -y sudo && rm -rf /var/lib/apt/lists/*
+
+# Copy the challenge files from the builder stage.
+# This assumes the main Dockerfile has been built locally, creating the 'builder' stage.
+COPY --from=builder /ctf /ctf
+COPY --from=builder /etc/profile.d/ctf_env.sh /etc/profile.d/ctf_env.sh
+
+# Set up a non-root user for the challenge
+RUN useradd -m ctfuser
+USER ctfuser
+WORKDIR /home/ctfuser
+
+# Start a shell for the user to interact with the challenge
+CMD ["bash"]

@@ -34,3 +34,10 @@ button {
     border-radius: 5px;
     cursor: pointer;
 }
+
+/* It seems like there is a strange url in one of the css rules */
+.hidden-link::after {
+    content: "d4e5f6a7b8c9.html";
+    display: block;
+    color: #fff;
+}

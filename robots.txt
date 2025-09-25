@@ -1,4 +1,8 @@
 User-agent: *
 Disallow: /admin
+Disallow: /d4e5f6a7b8c9.html
+Disallow: /1a2b3c4d5e6f.html
+Disallow: /9z8y7x6w5v4u.html
+Disallow: /f0e1d2c3b4a5.html
 
 # The flag is: CTF{r0b0ts_fl4g}

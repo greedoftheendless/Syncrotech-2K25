@@ -1,4 +1,5 @@
-FROM docker.io/library/ubuntu:latest
+# ---- Builder Stage (Keep this part of the Dockerfile secret) ----
+FROM docker.io/library/ubuntu:latest as builder
 
 # Install necessary tools
 RUN apt-get update && apt-get install -y \
@@ -23,12 +24,25 @@ RUN zip --password "easy" flag3_archive.zip flag3.txt
 RUN rm flag3.txt
 
 # Flag 4: Environment variable
-ENV FLAG4="CTF{3nv1r0nm3nt_v4r_fl4g}"
+# We write the environment variable to a file that will be sourced on login.
+RUN echo 'export FLAG4="CTF{3nv1r0nm3nt_v4r_fl4g}"' > /etc/profile.d/ctf_env.sh
 
-# Set up a non-root user for the challenge (good practice)
+
+# ---- Student Stage (This is what you share with your students) ----
+FROM docker.io/library/ubuntu:latest
+
+# We need to install sudo again because this is a new stage.
+RUN apt-get update && apt-get install -y sudo && rm -rf /var/lib/apt/lists/*
+
+# Copy the challenge files from the builder stage.
+# This copies the files without revealing how they were created.
+COPY --from=builder /ctf /ctf
+COPY --from=builder /etc/profile.d/ctf_env.sh /etc/profile.d/ctf_env.sh
+
+# Set up a non-root user for the challenge
 RUN useradd -m ctfuser
 USER ctfuser
 WORKDIR /home/ctfuser
 
-# Keep the container running
-CMD ["tail", "-f", "/dev/null"]
+# Start a shell for the user to interact with the challenge
+CMD ["bash"]
